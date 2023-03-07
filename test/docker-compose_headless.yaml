@@ -1,0 +1,25 @@
+services:
+  simulator:
+    image: ${SIMULATOR_IMAGE}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    network_mode: host
+    command:
+      ./bin/TelloLineTraceAirSim.linux.bin/TelloLineTraceAirSim.sh -RenderOffscreen
+
+  bridge:
+    image: ${BRIDGE_IMAGE}
+    network_mode: host
+    command:
+      python bridge.py
+
+  contrller:
+    image: ${CONTROLLER_IMAGE}
+    network_mode: host
+    command:
+      python controller.py --tello_ip 127.0.0.1 --headless --hsv_min 0 0 0 --hsv_max 70 255 255
