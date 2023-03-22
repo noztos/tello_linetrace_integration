@@ -6,6 +6,10 @@ on:
       - main
     paths:
       - 'config.yaml'
+    types:
+      - opened
+      - reopend
+      - syncronize
   workflow_dispatch:
 
 jobs:

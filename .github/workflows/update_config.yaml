@@ -1,0 +1,50 @@
+name: Update Config
+
+on:
+  repository_dispatch:
+    types:
+      - update_config
+
+jobs:
+  update_config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup yq
+        run: |
+          mkdir -p ${{ github.workspace }}/bin
+          wget https://github.com/mikefarah/yq/releases/download/v4.31.1/yq_linux_386 -O ${{ github.workspace }}/bin/yq
+          chmod +x ${{ github.workspace }}/bin/yq
+          echo ${{ github.workspace }}/bin >> $GITHUB_PATH
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update simulator tag
+        if: ${{ github.event.client_payload.simulator != null }}
+        run: |
+          yq -i eval '.images.simulator.tag = "${{ github.event.client_payload.simulator }}"' config.yaml
+
+      - name: Update bridge tag
+        if: ${{ github.event.client_payload.bridge != null }}
+        run: |
+          yq -i eval '.images.bridge.tag = "${{ github.event.client_payload.bridge }}"' config.yaml
+
+      - name: Update linetrace_control tag
+        if: ${{ github.event.client_payload.linetrace_control != null }}
+        run: |
+          yq -i eval '.images.linetrace_control.tag = "${{ github.event.client_payload.linetrace_control }}"' config.yaml
+
+      - name: Update teleop_key tag
+        if: ${{ github.event.client_payload.teleop_key != null }}
+        run: |
+          yq -i eval '.images.teleop_key.tag = "${{ github.event.client_payload.teleop_key }}"' config.yaml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          base: main
+          delete-branch: true
+          title: "Update config.yaml"
+          commit-message: "Update config.yaml"
+          body: "This PR is automatically created by GitHub Actions workflow \"${{ github.workflow }}\"."
+          branch: "feature/auto_update_config_${{ github.sha }}"
