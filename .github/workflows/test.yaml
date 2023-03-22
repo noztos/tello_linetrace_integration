@@ -2,15 +2,15 @@ name: Test
 
 on:
   pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'config.yaml'
-  #   types:
-  #     - opened
-  #     - reopend
-  #     - syncronize
-  # workflow_dispatch:
+    branches:
+      - main
+    paths:
+      - 'config.yaml'
+    types:
+      - opened
+      - reopend
+      - syncronize
+  workflow_dispatch:
 
 jobs:
   test:
