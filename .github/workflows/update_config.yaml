@@ -48,4 +48,4 @@ jobs:
           title: "Update config.yaml"
           commit-message: "Update config.yaml"
           body: "This PR is automatically created by GitHub Actions workflow \"${{ github.workflow }}\"."
-          branch: "feature/auto_update_config_${{ github.sha }}"
+          branch: "feature/auto_update_config"
