@@ -15,19 +15,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install yq
+      - name: Setup yq
         run: |
-          wget https://github.com/mikefarah/yq/releases/download/v4.31.1/yq_linux_386 -O ./yq && chmod +x ./yq
+          mkdir -p ${{ github.workspace }}/bin
+          wget https://github.com/mikefarah/yq/releases/download/v4.31.1/yq_linux_386 -O ${{ github.workspace }}/bin/yq
+          chmod +x ${{ github.workspace }}/bin/yq
+          echo ${{ github.workspace }}/bin >> $GITHUB_PATH
 
       - name: Parse config.yaml
         run: |
-          DOCKER_REGISTORY=`./yq eval '.registory' config.yaml`
-          SIMULATOR_REPOS=`./yq eval '.images.simulator.repository' config.yaml`
-          SIMULATOR_TAG=`./yq eval '.images.simulator.tag' config.yaml`
-          BRIDGE_REPOS=`./yq eval '.images.bridge.repository' config.yaml`
-          BRIDGE_TAG=`./yq eval '.images.bridge.tag' config.yaml`
-          CONTROLLER_REPOS=`./yq eval '.images.linetrace_control.repository' config.yaml`
-          CONTROLLER_TAG=`./yq eval '.images.linetrace_control.tag' config.yaml`
+          DOCKER_REGISTORY=`yq eval '.registory' config.yaml`
+          SIMULATOR_REPOS=`yq eval '.images.simulator.repository' config.yaml`
+          SIMULATOR_TAG=`yq eval '.images.simulator.tag' config.yaml`
+          BRIDGE_REPOS=`yq eval '.images.bridge.repository' config.yaml`
+          BRIDGE_TAG=`yq eval '.images.bridge.tag' config.yaml`
+          CONTROLLER_REPOS=`yq eval '.images.linetrace_control.repository' config.yaml`
+          CONTROLLER_TAG=`yq eval '.images.linetrace_control.tag' config.yaml`
           echo DOCKER_REGISTORY=${DOCKER_REGISTORY} >> $GITHUB_ENV
           echo SIMULATOR_IMAGE=${DOCKER_REGISTORY}/${SIMULATOR_REPOS}:${SIMULATOR_TAG} >> $GITHUB_ENV
           echo BRIDGE_IMAGE=${DOCKER_REGISTORY}/${BRIDGE_REPOS}:${BRIDGE_TAG} >> $GITHUB_ENV
