@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - 'config.yaml'
+    # paths:
+    #   - 'config.yaml'
     types:
       - opened
       - reopend
