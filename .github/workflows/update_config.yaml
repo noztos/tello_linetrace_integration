@@ -9,15 +9,33 @@ jobs:
   update_config:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check if PR exists
+        id: check_pr
+        run: |
+          echo "count=`gh pr list -S 'Auto update config.yaml'in:title | wc -l`" >> $GITHUB_OUTPUT
+
+      - name: Create or checkout branch
+        run: |
+          if [ ${{ steps.check_pr.outputs.count }} == 0 ]; then
+            if git ls-remote --exit-code --heads origin feature/auto_update_config; then
+              git push origin --delete feature/auto_update_config
+            fi
+            git fetch
+            git checkout -b feature/auto_update_config
+          else
+            git fetch
+            git checkout feature/auto_update_config
+          fi
+
       - name: Setup yq
         run: |
           mkdir -p ${{ github.workspace }}/bin
           wget https://github.com/mikefarah/yq/releases/download/v4.31.1/yq_linux_386 -O ${{ github.workspace }}/bin/yq
           chmod +x ${{ github.workspace }}/bin/yq
           echo ${{ github.workspace }}/bin >> $GITHUB_PATH
-
-      - name: Checkout
-        uses: actions/checkout@v3
 
       - name: Update simulator tag
         if: ${{ github.event.client_payload.simulator != null }}
@@ -39,13 +57,18 @@ jobs:
         run: |
           yq -i eval '.images.teleop_key.tag = "${{ github.event.client_payload.teleop_key }}"' config.yaml
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.GH_REPO_ACCESS_TOKEN }}
-          base: main
-          delete-branch: true
-          title: "Update config.yaml"
-          commit-message: "Update config.yaml"
-          body: "This PR is automatically created by GitHub Actions workflow \"${{ github.workflow }}\"."
-          branch: "feature/auto_update_config"
+      - name: Commit and push branch
+        run: |
+          git config user.email "noreply@exmotion.co.jp"
+          git config user.name "Bot User"
+          git add config.yaml
+          git commit -m "Update config.yaml"
+          git push origin feature/auto_update_config
+
+      - name: Create pull request
+        if: ${{ steps.check_pr.outputs.count == 0 }}
+        run: |
+          gh pr create \
+            -B main \
+            -t "Auto update config.yaml" \
+            -b "This PR is automatically created by GitHub Actions workflow"
