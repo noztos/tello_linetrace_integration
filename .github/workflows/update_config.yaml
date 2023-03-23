@@ -64,7 +64,7 @@ jobs:
       - name: Commit and push branch
         run: |
           git config user.email "noreply@exmotion.co.jp"
-          git config user.name "Bot User"
+          git config user.name "bot"
           git add config.yaml
           git commit -m "Update config.yaml"
           git push origin feature/auto_update_config
