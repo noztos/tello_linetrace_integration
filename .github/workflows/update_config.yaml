@@ -45,6 +45,7 @@ jobs:
           echo ${{ runner.temp }}/bin >> $GITHUB_PATH
 
       - run: |
+          echo '${{ toJSON(github) }}'
           echo ${{ github.event.event_type }}
           echo ${{ github.event.event_type == 'update_bridge_image' }}
 
