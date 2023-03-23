@@ -44,23 +44,27 @@ jobs:
           chmod +x ${{ runner.temp }}/bin/yq
           echo ${{ runner.temp }}/bin >> $GITHUB_PATH
 
+      - run: |
+          echo ${{ github.event.event_type }}
+          echo ${{ github.event.event_type == 'update_bridge_image' }}
+
       - name: Update bridge tag
-        if: github.event.event_type == 'update_bridge_image'
+        if: ${{ github.event.event_type == 'update_bridge_image' }}
         run: |
           yq -i eval '.images.bridge.tag = "${{ github.event.client_payload.tag }}"' config.yaml
 
       - name: Update simulator tag
-        if: github.event.event_type == 'update_simulator_image'
+        if: ${{ github.event.event_type == 'update_simulator_image' }}
         run: |
           yq -i eval '.images.simulator.tag = "${{ github.event.client_payload.tag }}"' config.yaml
 
       - name: Update linetrace_control tag
-        if: github.event.event_type == 'update_linetrace_control_image'
+        if: ${{ github.event.event_type == 'update_linetrace_control_image' }}
         run: |
           yq -i eval '.images.linetrace_control.tag = "${{ github.event.client_payload.tag }}"' config.yaml
 
       - name: Update teleop_key tag
-        if: github.event.event_type == 'update_teleop_key_image'
+        if: ${{ github.event.event_type == 'update_teleop_key_image' }}
         run: |
           yq -i eval '.images.teleop_key.tag = "${{ github.event.client_payload.tag }}"' config.yaml
 
