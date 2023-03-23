@@ -2,13 +2,13 @@ registory: 964246069091.dkr.ecr.us-east-1.amazonaws.com
 images:
   simulator:
     repository: simulator
-    tag: 6feb4e026009dbfcc94f7a0c6110a28e6f4643df
+    tag: 0ffe497d6af3f90bece0e83915b483c5918b89d9
   bridge:
     repository: bridge
-    tag: 6feb4e026009dbfcc94f7a0c6110a28e6f4643df
+    tag: 0ffe497d6af3f90bece0e83915b483c5918b89d9
   linetrace_control:
     repository: linetrace_control
-    tag: 360a9242dcd30c261a15465a781f4c4c01e18cef
+    tag: d45b8ccb39c7a82b6dcf2dbaa94b5647ad765541
   teleop_key:
     repository: teleop_key
-    tag: 52ee6309b7c83251a34d1bf3de9a1c63f5a4dcfe
+    tag: d45b8ccb39c7a82b6dcf2dbaa94b5647ad765541
