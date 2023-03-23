@@ -51,7 +51,6 @@ jobs:
 
       - name: Update simulator tag
         if: github.event.type == update_simulator_image
-        if: ${{ github.event.client_payload.simulator != null }}
         run: |
           yq -i eval '.images.simulator.tag = "${{ github.event.client_payload.tag }}"' config.yaml
 
