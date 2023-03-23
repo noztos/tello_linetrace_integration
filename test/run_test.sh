@@ -1,4 +1,5 @@
 #!/bin/bash
+xhost +
 
 DOCKER_REGISTORY=`yq eval '.registory' ../config.yaml`
 SIMULATOR_REPOS=`yq eval '.images.simulator.repository' ../config.yaml`
@@ -20,3 +21,5 @@ sleep 10
 python3 test.py
 sleep 10
 docker-compose down
+
+xhost -
