@@ -15,6 +15,7 @@ CONTROLLER_IMAGE=$DOCKER_REGISTORY/$CONTROLLER_REPOS:$CONTROLLER_TAG
 export SIMULATOR_IMAGE
 export BRIDGE_IMAGE
 export CONTROLLER_IMAGE
+export SIMULATOR_ENV='./simulator_env.json'
 
 docker-compose up -d
 sleep 10

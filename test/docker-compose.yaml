@@ -15,8 +15,9 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=all      
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${SIMULATOR_ENV}:/tmp/simulator_env.json
     command:
-      ./bin/TelloLineTraceAirSim.linux.bin/TelloLineTraceAirSim.sh -windowed -ResX=1280 -ResY=960
+      ./bin/LinetraceWorld/LinetraceWorld.sh -env=/tmp/simulator_env.json -ResX=1280 -ResY=960 -windowed
 
   bridge:
     image: ${BRIDGE_IMAGE}

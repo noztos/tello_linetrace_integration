@@ -9,8 +9,10 @@ services:
               count: 1
               capabilities: [gpu]
     network_mode: host
+    volumes:
+      - ${SIMULATOR_ENV}:/tmp/simulator_env.json
     command:
-      ./bin/TelloLineTraceAirSim.linux.bin/TelloLineTraceAirSim.sh -RenderOffscreen
+      ./bin/LinetraceWorld/LinetraceWorld.sh -env=/tmp/simulator_env.json -RenderOffscreen
 
   bridge:
     image: ${BRIDGE_IMAGE}
