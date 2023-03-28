@@ -58,7 +58,7 @@ jobs:
           docker pull ${{ env.BRIDGE_IMAGE }}
           docker pull ${{ env.CONTROLLER_IMAGE }}
 
-      - name: Run Test
+      - name: Run Simulation
         env:
           SIMULATOR_IMAGE: ${{ env.SIMULATOR_IMAGE }}
           BRIDGE_IMAGE: ${{ env.BRIDGE_IMAGE }}
@@ -75,8 +75,25 @@ jobs:
           docker-compose -f docker-compose_headless.yaml cp simulator:/home/simuser/Documents/AirSim/ ${{ runner.temp }}/AirSim/
           docker-compose -f docker-compose_headless.yaml down
 
-      - name: Upload Recording Data
+      - name: Verify Simulation Result
+        working-directory: test
+        run: |
+          python3 verify_flight_path.py \
+            -sp ./simulator_env.json \
+            -fl ${{ runner.temp }}/AirSim/*/airsim_rec.txt \
+            -png ${{ runner.temp }}/verify_result.png
+
+      - name: Copy Result
+        if: ${{ always() }}
+        run: |
+          mkdir ${{ runner.temp }}/result
+          cp ${{ runner.temp }}/AirSim/*/airsim_rec.txt ${{ runner.temp }}/result
+          cp -r ${{ runner.temp }}/AirSim/*/images ${{ runner.temp }}/result
+          cp ${{ runner.temp }}/verify_result.png ${{ runner.temp }}/result
+
+      - name: Upload Result
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: airsim_recording_data
-          path: ${{ runner.temp }}/AirSim
+          name: simulation_result
+          path: ${{ runner.temp }}/result
