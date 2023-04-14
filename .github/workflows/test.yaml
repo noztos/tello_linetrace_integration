@@ -75,6 +75,8 @@ jobs:
           export SIMULATOR_ENV='./simulator_env.json'
           docker-compose -f docker-compose_headless.yaml up -d
           sleep 10
+          pip install msgpack-rpc-python
+          pip install airsim
           python3 recording.py start
           python3 test.py
           python3 recording.py stop
