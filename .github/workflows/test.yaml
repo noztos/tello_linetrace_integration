@@ -26,6 +26,13 @@ jobs:
           chmod +x ${{ github.workspace }}/bin/yq
           echo ${{ github.workspace }}/bin >> $GITHUB_PATH
 
+      - name: Setup docker-compose
+        run: |
+          mkdir -p ${{ github.workspace }}/bin
+          wget https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-aarch64 -O ${{ github.workspace }}/bin/docker-compose
+          chmod +x ${{ github.workspace }}/bin/docker-compose
+          echo ${{ github.workspace }}/bin >> $GITHUB_PATH
+
       - name: Parse config.yaml
         run: |
           DOCKER_REGISTORY=`yq eval '.registory' config.yaml`
