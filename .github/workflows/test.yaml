@@ -39,6 +39,7 @@ jobs:
           python-version: '3.8'
 
       - name: Setup pip
+        run: |
           pip install msgpack-rpc-python
           pip install airsim
 
