@@ -33,6 +33,15 @@ jobs:
           chmod +x ${{ github.workspace }}/bin/docker-compose
           echo ${{ github.workspace }}/bin >> $GITHUB_PATH
 
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Setup pip
+          pip install msgpack-rpc-python
+          pip install airsim
+
       - name: Parse config.yaml
         run: |
           DOCKER_REGISTORY=`yq eval '.registory' config.yaml`
@@ -75,8 +84,6 @@ jobs:
           export SIMULATOR_ENV='./simulator_env.json'
           docker-compose -f docker-compose_headless.yaml up -d
           sleep 10
-          pip3 install msgpack-rpc-python
-          pip3 install airsim
           python3 recording.py start
           python3 test.py
           python3 recording.py stop
