@@ -20,7 +20,7 @@ services:
     command:
       python bridge.py
 
-  contrller:
+  controller:
     image: ${CONTROLLER_IMAGE}
     network_mode: host
     command:
