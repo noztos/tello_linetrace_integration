@@ -12,6 +12,10 @@ on:
       - synchronize
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   test:
     runs-on: [self-hosted, Linux, gpu]
@@ -36,7 +40,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
       - name: Setup pip
         run: |
@@ -44,7 +48,7 @@ jobs:
           pip install scipy
           pip install matplotlib
           pip install msgpack-rpc-python
-          pip install airsim
+          pip install airsim==1.5.0
 
       - name: Parse config.yaml
         run: |
@@ -61,16 +65,13 @@ jobs:
           echo CONTROLLER_IMAGE=${DOCKER_REGISTORY}/${CONTROLLER_REPOS}:${CONTROLLER_TAG} >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: "ap-northeast-1"
+          role-to-assume: ${{ secrets.IAM_ROLE_ARN }}
 
       - name: Login to Amazon ECR
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.DOCKER_REGISTORY }}
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Pull Docker Images
         run: |
