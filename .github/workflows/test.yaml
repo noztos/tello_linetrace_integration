@@ -44,11 +44,12 @@ jobs:
 
       - name: Setup pip
         run: |
+          pip install setuptools wheel
           pip install numpy
           pip install scipy
           pip install matplotlib
           pip install msgpack-rpc-python
-          pip install airsim==1.5.0
+          pip install airsim==1.7.0
 
       - name: Parse config.yaml
         run: |
@@ -93,6 +94,7 @@ jobs:
           python3 test.py
           python3 recording.py stop
           sleep 10
+          docker-compose -f docker-compose_headless.yaml logs
           docker-compose -f docker-compose_headless.yaml cp simulator:/home/simuser/Documents/AirSim/ ${{ runner.temp }}/AirSim/
           docker-compose -f docker-compose_headless.yaml down
 
