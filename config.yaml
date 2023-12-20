@@ -2,7 +2,7 @@ registory: 964246069091.dkr.ecr.ap-northeast-1.amazonaws.com
 images:
   simulator:
     repository: simulator
-    tag: ebff291d00080f23d77ce7eb218863330346cedc
+    tag: 45ab778d22ccc83125028f70bd95ebc7a2f43704
   bridge:
     repository: bridge
     tag: 2a468614f162dbb8995bd4a888efc634130b4296
