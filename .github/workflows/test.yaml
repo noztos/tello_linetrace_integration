@@ -18,10 +18,16 @@ permissions:
 
 jobs:
   test:
-    runs-on: [self-hosted, Linux, gpu]
+    #runs-on: [self-hosted, Linux, gpu]
+    runs-on: arc-runner-set
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup wget
+        run: |
+          sudo apt update
+          sudo apt -y install wget
 
       - name: Setup yq
         run: |
@@ -76,6 +82,7 @@ jobs:
 
       - name: Pull Docker Images
         run: |
+          timeout 3600 sh -c 'until (docker ps > /dev/null 2>&1) do sleep 1; done'
           docker pull ${{ env.SIMULATOR_IMAGE }}
           docker pull ${{ env.BRIDGE_IMAGE }}
           docker pull ${{ env.CONTROLLER_IMAGE }}
@@ -89,7 +96,7 @@ jobs:
         run: |
           export SIMULATOR_ENV='./simulator_env.json'
           docker-compose -f docker-compose_headless.yaml up -d
-          sleep 30
+          sleep 60
           python3 recording.py start
           python3 test.py
           python3 recording.py stop
