@@ -18,8 +18,7 @@ permissions:
 
 jobs:
   test:
-    #runs-on: [self-hosted, Linux, gpu]
-    runs-on: arc-runner-set
+    runs-on: gpu-runner
     steps:
       - name: Checkout
         uses: actions/checkout@v3
