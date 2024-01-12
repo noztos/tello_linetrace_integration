@@ -17,8 +17,27 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  pickup_testcases:
+    runs-on: ubuntu-latest
+    outputs:
+      testcases: ${{ steps.pickup_testcases.outputs.value }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pickup Test Cases
+        id: pickup_testcases
+        run: |
+          testcases=$(ls test/testcases | jq -c -R -s 'split("\n")[:-1]')
+          echo "value=${testcases}" >> $GITHUB_OUTPUT
+
+  run_tests:
+    needs: pickup_testcases
     runs-on: gpu-runner
+    strategy:
+      fail-fast: false
+      matrix:
+        testcase: ${{ fromJson(needs.pickup_testcases.outputs.testcases )}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -88,7 +107,7 @@ jobs:
           CONTROLLER_IMAGE: ${{ env.CONTROLLER_IMAGE }}
         working-directory: test
         run: |
-          export SIMULATOR_ENV='./simulator_env.json'
+          export SIMULATOR_ENV='./testcases/${{ matrix.testcase }}/simulator_env.json'
           docker-compose -f docker-compose_headless.yaml up -d
           sleep 60
           python3 recording.py start
@@ -103,7 +122,7 @@ jobs:
         working-directory: test
         run: |
           python3 verify_flight_path.py \
-            -sp ./simulator_env.json \
+            -sp ./testcases/${{ matrix.testcase }}/simulator_env.json \
             -fl ${{ runner.temp }}/AirSim/*/airsim_rec.txt \
             -png ${{ runner.temp }}/verify_result.png
 
@@ -119,5 +138,5 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: simulation_result
+          name: ${{ matrix.testcase }}
           path: ${{ runner.temp }}/result
