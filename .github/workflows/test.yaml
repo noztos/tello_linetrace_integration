@@ -72,13 +72,14 @@ jobs:
 
       - name: Parse config.yaml
         run: |
-          DOCKER_REGISTORY=`yq eval '.registory' config.yaml`
-          SIMULATOR_REPOS=`yq eval '.images.simulator.repository' config.yaml`
-          SIMULATOR_TAG=`yq eval '.images.simulator.tag' config.yaml`
-          BRIDGE_REPOS=`yq eval '.images.bridge.repository' config.yaml`
-          BRIDGE_TAG=`yq eval '.images.bridge.tag' config.yaml`
-          CONTROLLER_REPOS=`yq eval '.images.linetrace_control.repository' config.yaml`
-          CONTROLLER_TAG=`yq eval '.images.linetrace_control.tag' config.yaml`
+          export AWS_ACCOUNT=${{ secrets.AWS_ACCOUNT }}
+          DOCKER_REGISTORY=`envsubst < config.yaml | yq eval '.registory'`
+          SIMULATOR_REPOS=`envsubst < config.yaml | yq eval '.images.simulator.repository'`
+          SIMULATOR_TAG=`envsubst < config.yaml | yq eval '.images.simulator.tag'`
+          BRIDGE_REPOS=`envsubst < config.yaml | yq eval '.images.bridge.repository'`
+          BRIDGE_TAG=`envsubst < config.yaml | yq eval '.images.bridge.tag'`
+          CONTROLLER_REPOS=`envsubst < config.yaml | yq eval '.images.linetrace_control.repository'`
+          CONTROLLER_TAG=`envsubst < config.yaml | yq eval '.images.linetrace_control.tag'`
           echo DOCKER_REGISTORY=${DOCKER_REGISTORY} >> $GITHUB_ENV
           echo SIMULATOR_IMAGE=${DOCKER_REGISTORY}/${SIMULATOR_REPOS}:${SIMULATOR_TAG} >> $GITHUB_ENV
           echo BRIDGE_IMAGE=${DOCKER_REGISTORY}/${BRIDGE_REPOS}:${BRIDGE_TAG} >> $GITHUB_ENV
