@@ -23,7 +23,7 @@ jobs:
       testcases: ${{ steps.pickup_testcases.outputs.value }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Pickup Test Cases
         id: pickup_testcases
@@ -40,10 +40,10 @@ jobs:
         testcase: ${{ fromJson(needs.pickup_testcases.outputs.testcases )}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
@@ -86,13 +86,13 @@ jobs:
           echo CONTROLLER_IMAGE=${DOCKER_REGISTORY}/${CONTROLLER_REPOS}:${CONTROLLER_TAG} >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: "ap-northeast-1"
           role-to-assume: ${{ secrets.IAM_ROLE_ARN }}
 
       - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Pull Docker Images
         run: |
@@ -137,7 +137,7 @@ jobs:
 
       - name: Upload Result
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.testcase }}
           path: ${{ runner.temp }}/result
