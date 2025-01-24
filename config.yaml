@@ -1,4 +1,4 @@
-registory: ${AWS_ACCOUNT}.dkr.ecr.ap-northeast-1.amazonaws.com
+registory: __AWS_ACCOUNT__.dkr.ecr.ap-northeast-1.amazonaws.com
 images:
   simulator:
     repository: simulator
