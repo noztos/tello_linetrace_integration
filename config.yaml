@@ -8,7 +8,7 @@ images:
     tag: 7a2161b1c693662558c54e6a323563ce113b5bd1
   linetrace_control:
     repository: linetrace_control
-    tag: a18ee8194b09d8142f7013c56865f15888b62247
+    tag: 3b72c36e1de593efd9d7b788ee550236f5500bfa
   teleop_key:
     repository: teleop_key
     tag: 3b72c36e1de593efd9d7b788ee550236f5500bfa
