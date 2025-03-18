@@ -2,7 +2,7 @@ registory: __AWS_ACCOUNT__.dkr.ecr.ap-northeast-1.amazonaws.com
 images:
   simulator:
     repository: simulator
-    tag: 94294a0c173c7e73838e216580d7b696562e440f
+    tag: 7a2161b1c693662558c54e6a323563ce113b5bd1
   bridge:
     repository: bridge
     tag: 2a468614f162dbb8995bd4a888efc634130b4296
